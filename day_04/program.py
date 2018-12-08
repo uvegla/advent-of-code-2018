@@ -3,7 +3,33 @@ from collections import defaultdict
 from datetime import datetime
 
 
-def solve_part_1(lines):
+def solve_part_1_and_part_2(lines):
+    records = collect_records(lines)
+
+    return solve_part_1(records), solve_part_2(records)
+
+
+def solve_part_1(records):
+    leader_board = [
+        (guard, records[guard]) for guard in sorted(records, key=lambda k: records[k]['overall'], reverse=True)
+    ]
+
+    leader_id, leader_record = leader_board[0]
+    return leader_id * max(leader_record['minutes'], key=leader_record['minutes'].get)
+
+
+def solve_part_2(records):
+    leader_board = [
+        (guard, records[guard]) for guard in sorted(
+            records, key=lambda k: max(records[k]['minutes'].values() or [0]), reverse=True
+        )
+    ]
+
+    leader_id, leader_record = leader_board[0]
+    return leader_id * max(leader_record['minutes'], key=lambda k: leader_record['minutes'][k])
+
+
+def collect_records(lines):
     records, current_guard, fall_asleep_time = {}, '', 0
 
     for moment, action in parse(lines):
@@ -22,12 +48,7 @@ def solve_part_1(lines):
                 records[current_guard]['overall'] += 1
                 records[current_guard]['minutes'][minute] += 1
 
-    leader_board = [
-        (guard, records[guard]) for guard in sorted(records, key=lambda k: records[k]['overall'], reverse=True)
-    ]
-
-    leader_id, leader_record = leader_board[0]
-    return leader_id * max(leader_record['minutes'], key=leader_record['minutes'].get)
+    return records
 
 
 def parse(lines):
@@ -45,4 +66,4 @@ def parse(lines):
 if __name__ == '__main__':
     puzzle_input = open('input.txt').readlines()
 
-    print(solve_part_1(puzzle_input))
+    print(solve_part_1_and_part_2(puzzle_input))

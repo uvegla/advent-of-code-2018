@@ -1,11 +1,11 @@
 from unittest import TestCase
 
-from .program import solve_part_1
+from .program import solve_part_1_and_part_2
 
 
 class Day04TestCase(TestCase):
     def test_solve_part_1(self):
-        self.assertEqual(240, solve_part_1([
+        self.assertEqual((240, 4455), solve_part_1_and_part_2([
             '[1518-11-01 00:00] Guard #10 begins shift',
             '[1518-11-01 00:05] falls asleep',
             '[1518-11-01 00:25] wakes up',
